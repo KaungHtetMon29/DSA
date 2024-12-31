@@ -12,11 +12,11 @@ namespace BinaryTreeTest {
       this._value = v;
     }
 
-    public set right(v: TNode) {
+    public set right(v: TNode | null) {
       this._right = v;
     }
 
-    public set left(v: TNode) {
+    public set left(v: TNode | null) {
       this._left = v;
     }
 
@@ -72,11 +72,41 @@ namespace BinaryTreeTest {
         }
       }
     }
+    delete(value: number) {
+      this._root = this.deleteNode(value, this.root!);
+      return this.root;
+    }
+    private deleteNode(value: number, node: TNode | null): TNode | null {
+      if (node === null) {
+        return null;
+      }
+      if (value > node.value) {
+        node.right = this.deleteNode(value, node.right);
+      } else if (value < node.value) {
+        node.left = this.deleteNode(value, node.left);
+      } else {
+        if (node.left === null) {
+          return node.right;
+        }
+        if (node.right === null) {
+          return node.left;
+        }
+        const rightMin = this.findMin(node.right);
+        node.value = rightMin.value;
+        node.right = this.deleteNode(rightMin.value, node.right);
+      }
+      return node;
+    }
+    findMin(node: TNode) {
+      while (node.left !== null) {
+        node = node.left;
+      }
+      return node;
+    }
   }
-  const BST = new BinarySearchTree();
-  BST.addNode(3);
-  BST.addNode(1);
-  BST.addNode(2);
-  BST.addNode(4);
-  console.log(BST);
+  const bst = new BinarySearchTree();
+  const dummy = [20, 15, 25, 10, 17, 8, 12, 16, 19, 21, 28, 27, 29];
+  dummy.map((e) => bst.addNode(e));
+  bst.delete(10);
+  console.log(bst.root?.left?.left);
 }

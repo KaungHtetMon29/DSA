@@ -23,7 +23,7 @@ namespace BST {
       return this._right;
     }
 
-    public set right(v: TNode) {
+    public set right(v: TNode | null) {
       this._right = v;
     }
     constructor(value: number) {
@@ -49,7 +49,6 @@ namespace BST {
     addNode(value: number): boolean | undefined {
       const newNode = new TNode(value);
       if (this._root === null) {
-        console.log("begin");
         this.root = newNode;
         return true;
       } else {
@@ -59,17 +58,14 @@ namespace BST {
           if (currentNode.value === newNode.value) {
             traversing = false;
             return false;
-          } else if (currentNode.value > newNode.value) {
-            console.log("greater");
+          } else if (currentNode.value < newNode.value) {
             if (currentNode.right === null) {
               currentNode.right = newNode;
               return true;
             } else {
               currentNode = currentNode.right!;
             }
-          } else if (currentNode.value < newNode.value) {
-            console.log("less");
-
+          } else if (currentNode.value > newNode.value) {
             if (currentNode.left === null) {
               currentNode.left = newNode;
               return true;
@@ -80,11 +76,40 @@ namespace BST {
         }
       }
     }
+    delete(value: number) {
+      this._root = this.deleteNode(value, this._root!);
+    }
+    private deleteNode(value: number, root: TNode): TNode | null {
+      if (root === null) {
+        return null;
+      }
+      if (value > root.value) {
+        root.right = this.deleteNode(value, root.right!)!;
+      } else if (value < root.value) {
+        root.left = this.deleteNode(value, root.left!)!;
+      } else {
+        if (root.left === null) {
+          return root.right;
+        }
+        if (root.right === null) {
+          return root.left;
+        }
+        const min = this.findMin(value, root.right);
+        root.value = min.value;
+        root.right = this.deleteNode(min.value, root.right);
+      }
+      return root;
+    }
+    findMin(value: number, node: TNode) {
+      while (node.left !== null) {
+        node = node.left;
+      }
+      return node;
+    }
   }
   const bst = new BinarySearchTree();
-
-  bst.addNode(2);
-  bst.addNode(1);
-  bst.addNode(3);
-  console.log(bst);
+  const dummy = [20, 15, 25, 10, 17, 8, 12, 16, 19, 21, 28, 27, 29];
+  dummy.map((e) => bst.addNode(e));
+  bst.delete(10);
+  console.log(bst.root?.left?.left);
 }
