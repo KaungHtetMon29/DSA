@@ -2,17 +2,14 @@ namespace GraphSample {
   class Node {
     value: string;
     neighbor: Node[];
-
     constructor(value: any) {
       this.neighbor = [];
       this.value = value;
     }
-
     addNeighbor(node: Node) {
       this.neighbor.push(node);
     }
   }
-
   class Graph {
     node: Node[];
     constructor() {
@@ -27,6 +24,7 @@ namespace GraphSample {
       const destinationNode = this.node.find((e) => e.value === destination);
       if (sourceNode && destinationNode) {
         sourceNode.addNeighbor(destinationNode);
+        destinationNode.addNeighbor(sourceNode);
       }
     }
     printGraph() {
