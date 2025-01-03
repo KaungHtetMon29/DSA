@@ -34,6 +34,24 @@ namespace GraphSample {
       }
       console.log(buffer);
     }
+    breadthFirstSearch() {
+      let rootNode = this.node[0];
+      let visited: Node[] = [];
+      let queue: Node[] = [];
+      visited.push(rootNode);
+      queue.push(rootNode);
+      while (queue.length > 0) {
+        const currentNode = queue.shift()!;
+        for (let node of currentNode.neighbor) {
+          if (!visited.some((e) => e === node)) {
+            visited.push(node);
+            queue.push(node);
+          }
+        }
+      }
+      let data = visited.map((e) => e.value);
+      console.log(data);
+    }
   }
   const graph = new Graph();
   graph.addNode("1");
@@ -41,5 +59,9 @@ namespace GraphSample {
   graph.addNode("3");
   graph.addNode("4");
   graph.addEdge("1", "2");
-  graph.printGraph();
+  graph.addEdge("2", "3");
+  graph.addEdge("2", "4");
+
+  graph.breadthFirstSearch();
+  // graph.printGraph();
 }

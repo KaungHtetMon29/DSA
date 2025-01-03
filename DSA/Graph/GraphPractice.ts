@@ -34,6 +34,24 @@ namespace GraphPractice {
       this.nodes.map((e) => (output[e.value] = e.neighbor));
       return output;
     }
+    bst() {
+      let rootNode = this.nodes[0];
+      let visited: GNode[] = [];
+      let queue: GNode[] = [];
+      visited.push(rootNode);
+      queue.push(rootNode);
+      while (queue.length > 0) {
+        const cNode = queue.shift()!;
+        for (let node of cNode.neighbor) {
+          if (!visited.some((e) => e.value === node.value)) {
+            visited.push(node);
+            queue.push(node);
+          }
+        }
+      }
+      const data = visited.map((e) => e.value);
+      console.log(data);
+    }
   }
   const graph = new Graph();
   graph.addNode("1");
@@ -41,5 +59,8 @@ namespace GraphPractice {
   graph.addNode("3");
   graph.addNode("4");
   graph.addEdge("1", "2");
-  console.log(graph.printGraph());
+  graph.addEdge("2", "3");
+  graph.addEdge("2", "4");
+  graph.bst();
+  // console.log(graph.printGraph());
 }
